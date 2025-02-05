@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="d-flex flex-column align-items-center">
     <h1>Liste des utilisateurs</h1>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap justify-content-center">
       <UserCard
         v-for="user in users"
         :key="user.id"
@@ -12,35 +12,36 @@
   </div>
 </template>
 
-<script>
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
 import axios from "axios";
+import { useToast } from 'vue-toastification';
 import UserCard from "./UserCard.vue";
 
-export default {
-  name: "Home",
-  components: {
-    UserCard,
-  },
-  data() {
-    return {
-      users: [],
-    };
-  },
-  methods: {
-    async fetchUsers() {
-      try {
-        const response = await axios.get(`http://localhost:8000/users/all`);
-        this.users = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-  mounted() {
-    this.fetchUsers();
-  },
-};
-</script>
+const users = ref([]);
+const toast = useToast();
 
-<style scoped>
-</style>
+const fetchUsers = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    toast.error("Token is missing. Please log in.");
+    return;
+  }
+  try {
+    const response = await axios.get(`http://localhost:8000/users/all`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    users.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
+</script>
