@@ -1,0 +1,213 @@
+// USERS
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+POST http://localhost:8000/users/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "olive3",
+  "email": "olive3@olive.com",
+  "mot_de_passe": "olive"
+}
+
+###
+
+GET http://localhost:8000/users/all HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/users/update/3 HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "olive2"
+}
+
+###
+
+POST http://localhost:8000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "olive3@olive.com",
+  "mot_de_passe": "olive"
+}
+
+###
+
+DELETE  http://localhost:8000/users/delete/3 HTTP/1.1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+
+
+
+
+// COCKTAILS
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+POST http://localhost:8000/cocktails/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "Cocktail NEW",
+  "description": "un truc avec de l'alcool",
+  "verre": "oui",
+  "garniture": "Olive",
+  "alcoolise": 1
+}
+
+###
+
+GET http://localhost:8000/cocktails/all HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/cocktails/update/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "Cocktail de ouf"
+}
+
+###
+
+GET http://localhost:8000/cocktails/1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+DELETE  http://localhost:8000/cocktails/delete/5 HTTP/1.1
+Content-Type: application/json
+
+###
+
+
+
+
+
+// INGREDIENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+POST http://localhost:8000/cocktails/ingredients/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "NEW ingredient"
+}
+
+###
+
+GET http://localhost:8000/cocktails/ingredients/all HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/cocktails/ingredients/update/11 HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "Cocktail de ouf"
+}
+
+###
+
+GET http://localhost:8000/cocktails/ingredients/get/1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+DELETE  http://localhost:8000/cocktails/ingredients/delete/11 HTTP/1.1
+Content-Type: application/json
+
+###
+
+
+
+
+
+// CATEGORY
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+POST http://localhost:8000/cocktails/categories/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "NEW category"
+}
+
+###
+
+GET http://localhost:8000/cocktails/categories/all HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/cocktails/categories/update/4 HTTP/1.1
+Content-Type: application/json
+
+{
+  "nom": "Cocktail de ouf"
+}
+
+###
+
+GET http://localhost:8000/cocktails/categories/get/1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+DELETE  http://localhost:8000/cocktails/categories/delete/4 HTTP/1.1
+Content-Type: application/json
+
+###
+
+
+
+
+
+// ETAPES PREPARATION
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+POST http://localhost:8000/cocktails/etapes_preparations/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "cocktail_id":1,
+  "etape":"boire",
+  "ordre": 3
+}
+
+###
+
+GET http://localhost:8000/cocktails/etapes_preparations/all HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/cocktails/etapes_preparations/update/8 HTTP/1.1
+Content-Type: application/json
+
+{
+  "etape": "boire à fond"
+}
+
+###
+
+GET http://localhost:8000/cocktails/etapes_preparations/get/1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+DELETE  http://localhost:8000/cocktails/etapes_preparations/delete/8 HTTP/1.1
+Content-Type: application/json
+
+###
