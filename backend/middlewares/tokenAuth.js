@@ -5,11 +5,7 @@ const tokenAuth = (req, res, next) => {
   if (!authHeader)
     return res.status(401).json({ message: "Accès refusé : aucun token fourni" });
 
-  // Retirer le préfixe "Bearer " s'il est présent
-  let token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : authHeader;
-
-  // Supprimer les guillemets éventuels autour du token
-  token = token.replace(/^"(.*)"$/, "$1");
+  const token = authHeader;
 
   try {
     const decoded = jsonwebtoken.verify(token, process.env.TOKEN_SECRET);

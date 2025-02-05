@@ -115,7 +115,7 @@ const deleteUser = (req, res) => {
 
 const userLogin = (req, res) => {
   const { email, mot_de_passe } = req.body;
-  const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {expiresIn: "24h"});
+  const token = jwt.sign({ email }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
   const query = "SELECT * FROM utilisateurs WHERE email = ?";
 
   db.query(query, [email], async (err, result) => {
@@ -124,13 +124,14 @@ const userLogin = (req, res) => {
 
     try {
       const isMatched = await bcrypt.compare(mot_de_passe, result[0].mot_de_passe);
-
       if (!isMatched) return res.status(401).json({ message: "Mot de passe incorrect" });
 
+      // Ajout du préfixe Bearer et exposition de l'en-tête Authorization
       res.setHeader("Authorization", token);
+      res.setHeader("Access-Control-Expose-Headers", "Authorization");
       res.status(200).json({ message: "Connexion réussie" });
     } catch (compareError) {
-      return res.status(500).json({message: "Erreur lors de la comparaison des mots de passe",});
+      return res.status(500).json({ message: "Erreur lors de la comparaison des mots de passe" });
     }
   });
 };
