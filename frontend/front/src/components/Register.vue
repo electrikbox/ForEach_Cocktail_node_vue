@@ -5,13 +5,34 @@
         <h3 class="card-title text-center mb-3">Register</h3>
         <form @submit.prevent="register">
           <div class="mb-3">
-            <input type="text" class="form-control input-custom" id="name" v-model="name" required placeholder="Name"/>
+            <input
+              type="text"
+              class="form-control input-custom"
+              id="name"
+              v-model="name"
+              required
+              placeholder="Name"
+            />
           </div>
           <div class="mb-3">
-            <input type="email" class="form-control input-custom" id="email" v-model="email" required placeholder="Email"/>
+            <input
+              type="email"
+              class="form-control input-custom"
+              id="email"
+              v-model="email"
+              required
+              placeholder="Email"
+            />
           </div>
           <div class="mb-3">
-            <input type="password" class="form-control input-custom" id="password" v-model="password" required placeholder="Password" />
+            <input
+              type="password"
+              class="form-control input-custom"
+              id="password"
+              v-model="password"
+              required
+              placeholder="Password"
+            />
           </div>
           <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
@@ -37,9 +58,9 @@ const toast = useToast();
 const register = async () => {
   try {
     const response = await axios.post("http://localhost:8000/users/create", {
-      name: name.value,
+      nom: name.value,
       email: email.value,
-      password: password.value
+      mot_de_passe: password.value
     });
     toast.success("Registration successful.");
     router.push('/login');
@@ -55,19 +76,6 @@ onMounted(() => {
 </script>
 
 
-
-<style scoped>
-.input-custom {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-}
-
-.input-custom:focus {
-
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
-}
-</style>
 
 <style scoped>
 .input-custom {
