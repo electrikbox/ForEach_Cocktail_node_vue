@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import userRouter from './routes/users.js';
 import cocktailRouter from './routes/cocktails.js';
+import tokenAuth from './middlewares/tokenAuth.js';
 
 
 // Load environment variables
@@ -28,7 +29,7 @@ app.use(cors());
 
 // Routes
 app.use("/users", userRouter);
-app.use("/cocktails", cocktailRouter);
+app.use("/cocktails", tokenAuth, cocktailRouter);
 
 
 // Start server
