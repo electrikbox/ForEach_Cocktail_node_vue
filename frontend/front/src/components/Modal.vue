@@ -11,16 +11,21 @@
           <slot name="verre"></slot>
           <slot name="garniture"></slot>
           <slot name="categories"></slot>
+          <slot name="image"></slot>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
+
 <script setup>
 const emit = defineEmits(['close']);
 const close = () => emit('close');
 </script>
+
+
 
 <style scoped>
 .modal.fade.show.d-block {

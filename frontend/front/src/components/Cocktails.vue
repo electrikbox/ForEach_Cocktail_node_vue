@@ -7,6 +7,7 @@
         v-for="cocktail in cocktails"
         :key="cocktail.id"
         :nom="cocktail.nom"
+        :image="`/images/${cocktail.id}.jpg`"
         @click="showModal(cocktail)"
       />
     </div>
@@ -16,6 +17,9 @@
         <h5>{{ selectedCocktail.nom }}</h5>
       </template>
       <template v-slot:body>
+        <div class="d-flex justify-content-center">
+          <img :src="`/images/${selectedCocktail.id}.jpg`" class="img-fluid mb-3" alt="Cocktail Image" @error="handleError">
+        </div>
         <p>{{ selectedCocktail.description }}</p>
         <p class="m-0 p-0"><strong>Verre: </strong>{{ selectedCocktail.verre }}</p>
         <p class="m-0 p-0"><strong>Garniture:</strong> {{ selectedCocktail.garniture }}</p>
@@ -64,6 +68,8 @@ const showModal = (cocktail) => {
   selectedCocktail.value = cocktail;
   isModalVisible.value = true;
 };
+
+const handleError = (event) => event.target.src = '/images/default.png';
 
 onMounted(() => {
   fetchCocktails();
