@@ -84,10 +84,7 @@ const showModal = (cocktail) => {
 };
 
 const handleError = (event) => event.target.src = '/images/default.png';
-
-const resetSearch = () => {
-  searchQuery.value = '';
-};
+const resetSearch = () => searchQuery.value = '';
 
 const filteredCocktails = computed(() => {
   return cocktails.value.filter(cocktail => 
