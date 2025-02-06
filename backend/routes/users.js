@@ -13,5 +13,6 @@ userRouter.get("/all", tokenAuth, userController.getAllUsers);
 userRouter.get("/get/:id", tokenAuth, userController.getUser);
 userRouter.put("/update/:id", tokenAuth, userController.updateUser);
 userRouter.delete("/delete/:id", tokenAuth, userController.deleteUser);
+userRouter.post('/check-token', userController.checkToken);
 
 export default userRouter;
