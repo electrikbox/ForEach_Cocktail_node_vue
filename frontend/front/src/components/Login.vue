@@ -36,8 +36,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import { jwtDecode } from 'jwt-decode';
-import api from '../api.js';
-// import axios from 'axios';
+import { setToken } from '../composables/useAuth';
+import api from '../composables/api';
 
 const email = ref("");
 const password = ref("");
@@ -51,17 +51,12 @@ const login = async () => {
       mot_de_passe: password.value
     };
 
-    console.log(credentials);
-
-    // const response = await axios.post("http://localhost:8000/users/login", credentials);
     const response = await api.userApi.post("/login", credentials);
-    const token = response.headers.authorization;
+    const tokenValue = response.headers.authorization;
 
-    localStorage.setItem("token", token);
+    setToken(tokenValue);
 
-    console.log(response.data.message);
-
-    const decodedToken = jwtDecode(token);
+    const decodedToken = jwtDecode(tokenValue);
     const userName = decodedToken.nom;
 
     router.push('/home');
