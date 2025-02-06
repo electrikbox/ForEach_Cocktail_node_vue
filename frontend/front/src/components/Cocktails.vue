@@ -1,10 +1,14 @@
 <template>
   <div class="d-flex flex-column align-items-center">
     <h1>Liste des Cocktails</h1>
+    <div class="position-relative mb-3" style="width: 300px;">
+      <input v-model="searchQuery" type="text" placeholder="Rechercher par nom ou catégorie" class="form-control pr-5">
+      <i v-if="searchQuery" @click="resetSearch" class="fas fa-times position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+    </div>
 
     <div class="d-flex flex-wrap justify-content-center">
       <CocktailCard
-        v-for="cocktail in cocktails"
+        v-for="cocktail in filteredCocktails"
         :key="cocktail.id"
         :nom="cocktail.nom"
         :image="`/images/${cocktail.id}.jpg`"
@@ -41,14 +45,13 @@
         </div>
       </template>
     </Modal>
-
-</div>
+  </div>
 </template>
 
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 import api from "../composables/api";
 import Modal from "./Modal.vue";
@@ -58,6 +61,7 @@ const cocktails = ref([]);
 const toast = useToast();
 const isModalVisible = ref(false);
 const selectedCocktail = ref(null);
+const searchQuery = ref('');
 
 const fetchCocktails = async () => {
   const token = localStorage.getItem("token");
@@ -81,7 +85,25 @@ const showModal = (cocktail) => {
 
 const handleError = (event) => event.target.src = '/images/default.png';
 
-onMounted(() => {
-  fetchCocktails();
+const resetSearch = () => {
+  searchQuery.value = '';
+};
+
+const filteredCocktails = computed(() => {
+  return cocktails.value.filter(cocktail => 
+    cocktail.nom.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    (cocktail.categories && cocktail.categories.some(cat => cat.nom.toLowerCase().includes(searchQuery.value.toLowerCase())))
+  );
 });
+
+onMounted(() => fetchCocktails());
 </script>
+
+
+
+<style scoped>
+.position-relative {
+  width: 100%;
+  max-width: 300px;
+}
+</style>
