@@ -3,15 +3,31 @@
     <nav class="navbar navbar-expand-lg navbar-light mb-4">
       <div class="container">
         <ul class="navbar-nav flex-row justify-content-center w-100">
-          <li class="nav-item mx-2"><RouterLink class="btn btn-link" to="/home">User List</RouterLink></li>
+          <li class="nav-item mx-2"><RouterLink class="btn btn-link colo" to="/home">User List</RouterLink></li>
           <li class="nav-item mx-2"><RouterLink class="btn btn-link" to="/cocktails">Cocktails List</RouterLink></li>
-          <li class="nav-item mx-2"><RouterLink class="btn btn-link" to="/register">Register</RouterLink></li>
-          <li class="nav-item mx-2"><RouterLink class="btn btn-link" to="/login">Login</RouterLink></li>
+          <li v-if="!token" class="nav-item mx-2"><RouterLink class="btn btn-link" to="/register">Register</RouterLink></li>
+          <li v-if="!token" class="nav-item mx-2"><RouterLink class="btn btn-link" to="/login">Login</RouterLink></li>
+          <li v-if="token" class="nav-item mx-2"><button class="btn btn-link" @click="logout">Logout</button></li>
         </ul>
       </div>
     </nav>
   </header>
 </template>
+
+
+
+<script setup>
+import { token, removeToken } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const logout = () => {
+  removeToken()
+  router.push('/login')
+}
+</script>
+
+
 
 <style scoped>
   header {
