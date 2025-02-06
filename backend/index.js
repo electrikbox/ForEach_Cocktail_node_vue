@@ -14,13 +14,16 @@ dotenv.config();
 // Create express app
 const app = express();
 
-
-// Connect to database
-db.connect((err) => {
-    if (err) throw err;
+// Test database connection
+(async () => {
+  try {
+    const connection = await db.getConnection();
     console.log('Connected to database');
-});
-
+    connection.release();
+  } catch (err) {
+    console.error('Database connection failed:', err);
+  }
+})();
 
 // Middleware
 app.use(express.json());
@@ -34,5 +37,5 @@ app.use("/cocktails", tokenAuth, cocktailRouter);
 
 // Start server
 app.listen(process.env.PORT, () => {
-    console.log(`listening at http://localhost:${process.env.PORT}`);
+  console.log(`listening at http://localhost:${process.env.PORT}`);
 });
