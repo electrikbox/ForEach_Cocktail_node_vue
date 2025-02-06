@@ -138,7 +138,7 @@ const userLogin = (req, res) => {
       const isMatched = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
       if (!isMatched) return res.status(401).json({ message: "Mot de passe incorrect" });
 
-      const token = jwt.sign({ email: user.email, nom: user.nom }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
+      const token = jwt.sign({ email: user.email, nom: user.nom, id: user.id}, process.env.TOKEN_SECRET, { expiresIn: "24h" });
 
       // Ajout du préfixe Bearer et exposition de l'en-tête Authorization
       res.setHeader("Authorization", token);
@@ -152,6 +152,33 @@ const userLogin = (req, res) => {
 
 
 
+// Check token
+// ============================================================================
+
+const checkToken = async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ message: "Token manquant ou mal formaté" });
+
+  const token = authHeader;
+
+  try {
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      const query = "SELECT * FROM utilisateurs WHERE id = ?";
+
+      db.query(query, [decoded.id],(err, result) => {
+        if (err) return res.status(500).json({ message: "Erreur lors de la récupération de l' utilisateur" });
+        if (!result) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
+        res.status(200).json({ message: "Token valide" });
+      });
+
+  } catch (error) {
+      console.error("Erreur de validation du token:", error.message);
+      return res.status(401).json({ message: "Token invalide ou expiré" });
+  }
+}
+
+
+
 // Export controller functions
 export default {
     createUser,
@@ -159,5 +186,6 @@ export default {
     getUser,
     updateUser,
     deleteUser,
-    userLogin
+    userLogin,
+    checkToken
 };
