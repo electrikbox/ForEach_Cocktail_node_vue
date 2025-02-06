@@ -108,7 +108,7 @@ const deleteUser = (req, res) => {
 
   db.query(query, [id], (err, result) => {
     if (err) return res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur" });
-    if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
+    if (result.affectedRows === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
     res.status(200).json({ message: "Utilisateur supprimé" });
   });
 }

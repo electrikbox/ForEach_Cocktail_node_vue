@@ -110,9 +110,9 @@ const deleteCocktail = (req, res) => {
     const { id } = req.params;
     const query = "DELETE FROM cocktails WHERE id = ?";
     
-    db.query(query, id, (err, result) => {
+    db.query(query, [id], (err, result) => {
         if (err) return res.status(500).json({ message: "Erreur lors de la suppression du cocktail" });
-        if (!result) return res.status(404).json({ message: "Cocktail non trouvé" });
+        if (!result.affectedRows) return res.status(404).json({ message: "Cocktail non trouvé" });
         res.status(200).json({ message: "Cocktail supprimé" });
     });
 };
