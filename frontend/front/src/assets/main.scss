@@ -1,0 +1,28 @@
+html, body, #app {
+  background-color: rgb(233, 233, 233);
+}
+
+#app {
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+  width: 100vw;
+}
+
+.credentials-card {
+  margin-top: 5rem;
+  width: 20rem;
+}
+
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+// Define custom color
+$custom-colors: (
+  "dark-red": #830a0a
+);
+
+// Merge custom colors with Bootstrap theme colors
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
