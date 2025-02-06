@@ -99,6 +99,8 @@
   </div>
 </template>
 
+
+
 <script setup>
 import { ref, toRaw } from 'vue';
 import api from '../composables/api';
@@ -161,6 +163,8 @@ const addCocktail = async () => {
   }
 };
 </script>
+
+
 
 <style>
 @import "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css";

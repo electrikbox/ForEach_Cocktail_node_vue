@@ -1,5 +1,4 @@
 import './assets/main.scss'
-
 import App from './App.vue'
 import Toast, { POSITION } from 'vue-toastification'
 import { router } from './router/router'
