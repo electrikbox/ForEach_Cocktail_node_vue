@@ -16,8 +16,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from "axios";
 import { useToast } from 'vue-toastification';
+import api from "../api.js";
 import UserCard from "./UserCard.vue";
 
 const users = ref([]);
@@ -29,12 +29,10 @@ const fetchUsers = async () => {
     toast.error("Token is missing. Please log in.");
     return;
   }
+
+
   try {
-    const response = await axios.get(`http://localhost:8000/users/all`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+    const response = await api.userApi.get("/all");
     users.value = response.data;
   } catch (error) {
     console.error(error);
