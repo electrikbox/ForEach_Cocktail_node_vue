@@ -10,6 +10,7 @@ const cocktailRouter = Router();
 
 // Routes
 cocktailRouter.post("/create", cocktailController.createCocktail);
+cocktailRouter.post("/insert", cocktailController.insertCocktail);
 cocktailRouter.get("/all", cocktailController.getAllCocktails);
 cocktailRouter.get("/get/:id", cocktailController.getCocktail);
 cocktailRouter.put("/update/:id", cocktailController.updateCocktail);
