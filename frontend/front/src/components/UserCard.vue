@@ -12,6 +12,8 @@
   </div>
 </template>
 
+
+
 <script setup>
 const props = defineProps({
   nom: {
@@ -27,6 +29,8 @@ const props = defineProps({
 const emit = defineEmits(['delete-user']);
 const deleteUser = () => emit('delete-user');
 </script>
+
+
 
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');

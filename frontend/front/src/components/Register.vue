@@ -71,8 +71,4 @@ const register = async () => {
     toast.error("Registration failed. Please try again.");
   }
 };
-
-onMounted(() => {
-  console.log('Register component has been mounted.');
-});
 </script>

@@ -52,7 +52,5 @@ const removeUser = async (userId) => {
   }
 };
 
-onMounted(() => {
-  fetchUsers();
-});
+onMounted(() => fetchUsers());
 </script>

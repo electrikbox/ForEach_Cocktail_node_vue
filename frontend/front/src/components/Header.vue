@@ -29,7 +29,7 @@ const logout = () => {
 
 
 
-<style scoped>
+<style scoped lang="scss">
   header {
     background-color: #f8f9fa;
     border-radius: 5px;
@@ -44,20 +44,20 @@ const logout = () => {
     color: #4f4f4f;
     font-weight: 600;
     text-decoration: none;
-  }
-  .btn-link:hover {
-    color: #761f1f;
-  }
-  .btn-link::after {
-    color: #761f1f;
-    content: '';
-    display: block;
-    width: 0;
-    height: 2px;
-    background: #761f1f;
-    transition: width 0.3s;
-  }
-  .btn-link:hover::after {
-    width: 100%;
+    &::after {
+      color: #761f1f;
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: #761f1f;
+      transition: width 0.3s;
+    }
+    &:hover {
+      color: #761f1f;
+      &::after {
+        width: 100%;
+      }
+    }
   }
 </style>
