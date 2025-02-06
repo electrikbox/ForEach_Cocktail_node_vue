@@ -1,6 +1,7 @@
 import { db } from "../config/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import xss from "xss";
 
 
 
@@ -8,10 +9,14 @@ import bcrypt from "bcryptjs";
 // ============================================================================
 
 const createUser = (req, res) => {
-  const { nom, email, mot_de_passe } = req.body;
+  let { nom, email, mot_de_passe } = req.body;
 
   if (!nom || !email || !mot_de_passe)
     return res.status(400).json({ message: "Veuillez remplir tous les champs" });
+
+  nom = xss(nom);
+  email = xss(email);
+  mot_de_passe = xss(mot_de_passe);
 
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(mot_de_passe, salt);
@@ -114,17 +119,26 @@ const deleteUser = (req, res) => {
 // ============================================================================
 
 const userLogin = (req, res) => {
-  const { email, mot_de_passe } = req.body;
-  const token = jwt.sign({ email }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
-  const query = "SELECT * FROM utilisateurs WHERE email = ?";
+  let { email, mot_de_passe } = req.body;
 
+  if (!email || !mot_de_passe)
+    return res.status(400).json({ message: "Veuillez remplir tous les champs" });
+
+  email = xss(email);
+  mot_de_passe = xss(mot_de_passe);
+
+  const query = "SELECT * FROM utilisateurs WHERE email = ?";
+  
   db.query(query, [email], async (err, result) => {
     if (err) return res.status(500).json({ message: "Erreur lors de la connexion" });
     if (result.length === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
-
+    
     try {
-      const isMatched = await bcrypt.compare(mot_de_passe, result[0].mot_de_passe);
+      const user = result[0];
+      const isMatched = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
       if (!isMatched) return res.status(401).json({ message: "Mot de passe incorrect" });
+
+      const token = jwt.sign({ email: user.email, nom: user.nom }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
 
       // Ajout du préfixe Bearer et exposition de l'en-tête Authorization
       res.setHeader("Authorization", token);
