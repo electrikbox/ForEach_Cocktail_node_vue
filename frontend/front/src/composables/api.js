@@ -1,5 +1,5 @@
 import axios from "axios";
-import router from "./router/router.js";
+import router from "../router/router";
 import { jwtDecode } from "jwt-decode";
 
 
