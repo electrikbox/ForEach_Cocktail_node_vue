@@ -3,7 +3,7 @@ import Home from '../components/Home.vue'
 import Cocktails from '../components/Cocktails.vue'
 import Register from '../components/Register.vue'
 import Login from '@/components/Login.vue'
-import api from "../api.js";
+import api from "../composables/api";
 import { useToast } from 'vue-toastification';
 
 
