@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import Cocktails from '../components/Cocktails.vue'
+import AddCocktail from '../components/AddCocktail.vue'
 import Register from '../components/Register.vue'
 import Login from '@/components/Login.vue'
 import api from "../composables/api";
@@ -13,6 +14,7 @@ export const router = createRouter({
   routes: [
     { path: '/home', name: 'home', component: Home, meta: { requiresAuth: true } },
     { path: '/cocktails', name: 'cocktails', component: Cocktails, meta: { requiresAuth: true } },
+    { path: '/addCocktail', name: 'addCocktail', component: AddCocktail, meta: { requiresAuth: true } },
     { path: '/register', name: 'register', component: Register },
     { path: '/login', name: 'login', component: Login },
   ],

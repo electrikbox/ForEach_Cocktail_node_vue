@@ -13,6 +13,7 @@
         :nom="cocktail.nom"
         :image="`/images/${cocktail.id}.jpg`"
         @click="showModal(cocktail)"
+        @delete="deleteCocktail(cocktail.id)"
       />
     </div>
 
@@ -85,6 +86,23 @@ const showModal = (cocktail) => {
 
 const handleError = (event) => event.target.src = '/images/default.png';
 const resetSearch = () => searchQuery.value = '';
+
+const deleteCocktail = async (id) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    toast.error("Token is missing. Please log in.");
+    return;
+  }
+
+  try {
+    await api.cocktailApi.delete(`/delete/${id}`);
+    cocktails.value = cocktails.value.filter(cocktail => cocktail.id !== id);
+    toast.success("Cocktail deleted successfully.");
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to delete cocktail.");
+  }
+};
 
 const filteredCocktails = computed(() => {
   return cocktails.value.filter(cocktail => 
