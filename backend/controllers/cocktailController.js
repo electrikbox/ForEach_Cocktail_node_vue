@@ -26,22 +26,7 @@ const createCocktail = (req, res) => {
 // ============================================================================
 
 const getAllCocktails = (req, res) => {
-  const query = `
-    SELECT
-      c.*,
-      GROUP_CONCAT(DISTINCT cat.nom SEPARATOR ', ') AS categories,
-      GROUP_CONCAT(DISTINCT i.nom SEPARATOR ', ') AS ingredients,
-      GROUP_CONCAT(DISTINCT ci.quantite SEPARATOR ', ') AS quantites,
-      GROUP_CONCAT(DISTINCT CONCAT(ep.ordre, '-', ep.etape) ORDER BY ep.ordre SEPARATOR ', ') AS etapes
-    FROM cocktails c
-    LEFT JOIN cocktail_ingredients ci ON c.id = ci.cocktail_id
-    LEFT JOIN ingredients i ON ci.ingredient_id = i.id
-    LEFT JOIN cocktail_categories cc ON c.id = cc.cocktail_id
-    LEFT JOIN categories cat ON cc.categorie_id = cat.id
-    LEFT JOIN etapes_preparation ep ON c.id = ep.cocktail_id
-    GROUP BY c.id
-    ORDER BY c.id ASC
-  `;
+  const query = 'SELECT * FROM vue_cocktails';
 
   db.query(query, (err, result) => {
     if (err)
@@ -61,30 +46,14 @@ const getAllCocktails = (req, res) => {
 
 const getCocktail = (req, res) => {
   const { id } = req.params;
-  const query = `
-    SELECT
-      c.*,
-      GROUP_CONCAT(DISTINCT cat.nom SEPARATOR ', ') AS categories,
-      GROUP_CONCAT(DISTINCT i.nom SEPARATOR ', ') AS ingredients,
-      GROUP_CONCAT(DISTINCT ci.quantite SEPARATOR ', ') AS quantites,
-      GROUP_CONCAT(DISTINCT CONCAT(ep.ordre, '-', ep.etape) ORDER BY ep.ordre SEPARATOR ', ') AS etapes
-    FROM cocktails c
-    LEFT JOIN cocktail_ingredients ci ON c.id = ci.cocktail_id
-    LEFT JOIN ingredients i ON ci.ingredient_id = i.id
-    LEFT JOIN cocktail_categories cc ON c.id = cc.cocktail_id
-    LEFT JOIN categories cat ON cc.categorie_id = cat.id
-    LEFT JOIN etapes_preparation ep ON c.id = ep.cocktail_id
-    WHERE c.id = ?
-    GROUP BY c.id
-    ORDER BY c.id ASC
-  `;
+  const query = 'SELECT * FROM vue_cocktails WHERE id = ?';
 
   db.query(query, [id], (err, result) => {
     if (err)
-      return res.status(500).json({ message: "Erreur lors de la récupération des cocktails" });
+      return res.status(500).json({ message: "Erreur lors de la récupération du cocktail" });
     if (!result || result.length === 0)
       return res.status(404).json({ message: "Aucun cocktail trouvé" });
-    res.status(200).json(result);
+    res.status(200).json(result[0]);
   });
 };
 
