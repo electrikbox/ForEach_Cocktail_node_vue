@@ -8,7 +8,7 @@ import xss from "xss";
 // Create a new user
 // ============================================================================
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
   let { nom, email, mot_de_passe } = req.body;
 
   if (!nom || !email || !mot_de_passe)
@@ -23,11 +23,15 @@ const createUser = (req, res) => {
 
   const query = "INSERT INTO utilisateurs (nom, email, mot_de_passe) VALUES (?, ?, ?)";
 
-  db.query(query, [nom, email, hash], (err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
-    if (!result) return res.status(400).json({ message: "Erreur lors de la création de l'utilisateur" });
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, [nom, email, hash]);
+    connection.release();
     res.status(201).json({ message: "Utilisateur créé" });
-  });
+  } catch (err) {
+    console.error("Erreur lors de la création de l'utilisateur :", err);
+    res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
+  }
 };
 
 
@@ -35,30 +39,40 @@ const createUser = (req, res) => {
 // Get all users
 // ============================================================================
 
-const getAllUsers = (req, res) => {
+const getAllUsers = async (req, res) => {
   const query = "SELECT * FROM utilisateurs ORDER BY id ASC";
 
-  db.query(query, (err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs" });
-    if (!result) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query);
+    connection.release();
+    if (!result.length) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
     res.status(200).json(result);
-  });
+  } catch (err) {
+    console.error("Erreur lors de la récupération des utilisateurs :", err);
+    res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs" });
+  }
 };
 
 
 
-// Get 1 users
+// Get 1 user
 // ============================================================================
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
   const { id } = req.params;
   const query = "SELECT * FROM utilisateurs WHERE id = ?";
 
-  db.query(query, [id],(err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs" });
-    if (!result) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
-    res.status(200).json(result);
-  });
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, [id]);
+    connection.release();
+    if (!result.length) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", err);
+    res.status(500).json({ message: "Erreur lors de la récupération de l'utilisateur" });
+  }
 };
 
 
@@ -66,7 +80,7 @@ const getUser = (req, res) => {
 // Update user by id
 // ============================================================================
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   const { id } = req.params;
   const fields = [];
   const values = [];
@@ -80,8 +94,10 @@ const updateUser = (req, res) => {
     values.push(req.body.email);
   }
   if (req.body.mot_de_passe) {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.mot_de_passe, salt);
     fields.push("mot_de_passe = ?");
-    values.push(req.body.mot_de_passe);
+    values.push(hash);
   }
 
   if (fields.length === 0)
@@ -90,11 +106,16 @@ const updateUser = (req, res) => {
   values.push(id);
   const query = `UPDATE utilisateurs SET ${fields.join(", ")} WHERE id = ?`;
 
-  db.query(query, values, (err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur" });
-    if (!result) return res.status(404).json({ message: "Utilisateur non trouvé" });
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, values);
+    connection.release();
+    if (!result.affectedRows) return res.status(404).json({ message: "Utilisateur non trouvé" });
     res.status(200).json({ message: "Utilisateur mis à jour" });
-  });
+  } catch (err) {
+    console.error("Erreur lors de la mise à jour de l'utilisateur :", err);
+    res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur" });
+  }
 };
 
 
@@ -102,23 +123,28 @@ const updateUser = (req, res) => {
 // Delete user by id
 // ============================================================================
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM utilisateurs WHERE id = ?";
 
-  db.query(query, [id], (err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur" });
-    if (result.affectedRows === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, [id]);
+    connection.release();
+    if (!result.affectedRows) return res.status(404).json({ message: "Utilisateur non trouvé" });
     res.status(200).json({ message: "Utilisateur supprimé" });
-  });
-}
+  } catch (err) {
+    console.error("Erreur lors de la suppression de l'utilisateur :", err);
+    res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur" });
+  }
+};
 
 
 
-//login
+// Login
 // ============================================================================
 
-const userLogin = (req, res) => {
+const userLogin = async (req, res) => {
   let { email, mot_de_passe } = req.body;
 
   if (!email || !mot_de_passe)
@@ -128,26 +154,26 @@ const userLogin = (req, res) => {
   mot_de_passe = xss(mot_de_passe);
 
   const query = "SELECT * FROM utilisateurs WHERE email = ?";
-  
-  db.query(query, [email], async (err, result) => {
-    if (err) return res.status(500).json({ message: "Erreur lors de la connexion" });
+
+  try {
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, [email]);
+    connection.release();
     if (result.length === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
-    
-    try {
-      const user = result[0];
-      const isMatched = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
-      if (!isMatched) return res.status(401).json({ message: "Mot de passe incorrect" });
 
-      const token = jwt.sign({ email: user.email, nom: user.nom, id: user.id}, process.env.TOKEN_SECRET, { expiresIn: "24h" });
+    const user = result[0];
+    const isMatched = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
+    if (!isMatched) return res.status(401).json({ message: "Mot de passe incorrect" });
 
-      // Ajout du préfixe Bearer et exposition de l'en-tête Authorization
-      res.setHeader("Authorization", token);
-      res.setHeader("Access-Control-Expose-Headers", "Authorization");
-      res.status(200).json({ message: "Connexion réussie" });
-    } catch (compareError) {
-      return res.status(500).json({ message: "Erreur lors de la comparaison des mots de passe" });
-    }
-  });
+    const token = jwt.sign({ email: user.email, nom: user.nom, id: user.id }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
+
+    res.setHeader("Authorization", token);
+    res.setHeader("Access-Control-Expose-Headers", "Authorization");
+    res.status(200).json({ message: "Connexion réussie" });
+  } catch (err) {
+    console.error("Erreur lors de la connexion :", err);
+    res.status(500).json({ message: "Erreur lors de la connexion" });
+  }
 };
 
 
@@ -162,18 +188,17 @@ const checkToken = async (req, res) => {
   const token = authHeader;
 
   try {
-      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-      const query = "SELECT * FROM utilisateurs WHERE id = ?";
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    const query = "SELECT * FROM utilisateurs WHERE id = ?";
 
-      db.query(query, [decoded.id],(err, result) => {
-        if (err) return res.status(500).json({ message: "Erreur lors de la récupération de l' utilisateur" });
-        if (!result) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
-        res.status(200).json({ message: "Token valide" });
-      });
-
+    const connection = await db.getConnection();
+    const [result] = await connection.query(query, [decoded.id]);
+    connection.release();
+    if (!result.length) return res.status(404).json({ message: "Aucun utilisateur trouvé" });
+    res.status(200).json({ message: "Token valide" });
   } catch (error) {
-      console.error("Erreur de validation du token:", error.message);
-      return res.status(401).json({ message: "Token invalide ou expiré" });
+    console.error("Erreur de validation du token:", error.message);
+    return res.status(401).json({ message: "Token invalide ou expiré" });
   }
 }
 
@@ -181,11 +206,11 @@ const checkToken = async (req, res) => {
 
 // Export controller functions
 export default {
-    createUser,
-    getAllUsers,
-    getUser,
-    updateUser,
-    deleteUser,
-    userLogin,
-    checkToken
+  createUser,
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  userLogin,
+  checkToken
 };
