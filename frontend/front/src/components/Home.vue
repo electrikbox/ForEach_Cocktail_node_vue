@@ -20,6 +20,17 @@ import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import api from "../composables/api";
 import UserCard from "./UserCard.vue";
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Home',
+  meta: [
+    {
+      name: 'description',
+      content: 'Liste des utilisateurs'
+    }
+  ]
+})
 
 const users = ref([]);
 const toast = useToast();

@@ -104,6 +104,17 @@
 <script setup>
 import { ref, toRaw } from 'vue';
 import api from '../composables/api';
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Ajout de Cocktail',
+  meta: [
+    {
+      name: 'description',
+      content: 'Ajouter un cocktail'
+    }
+  ]
+})
 
 const cocktail = ref({
   nom: '',

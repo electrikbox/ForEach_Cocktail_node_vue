@@ -57,6 +57,17 @@ import { useToast } from 'vue-toastification';
 import api from "../composables/api";
 import Modal from "./Modal.vue";
 import CocktailCard from "./CocktailCard.vue";
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Liste des Cocktails',
+  meta: [
+    {
+      name: 'description',
+      content: 'Liste des cocktails'
+    }
+  ]
+})
 
 const cocktails = ref([]);
 const toast = useToast();

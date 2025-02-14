@@ -50,6 +50,17 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Register',
+  meta: [
+    {
+      name: 'description',
+      content: 'Register page'
+    }
+  ]
+})
 
 const name = ref("");
 const email = ref("");

@@ -38,6 +38,17 @@ import { useToast } from 'vue-toastification';
 import { jwtDecode } from 'jwt-decode';
 import { setToken } from '../composables/useAuth';
 import api from '../composables/api';
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Login',
+  meta: [
+    {
+      name: 'description',
+      content: 'Login page'
+    }
+  ]
+})
 
 const email = ref("");
 const password = ref("");
