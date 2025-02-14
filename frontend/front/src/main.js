@@ -3,6 +3,7 @@ import App from './App.vue'
 import Toast, { POSITION } from 'vue-toastification'
 import { router } from './router/router'
 import { createApp } from 'vue'
+import { createHead } from '@vueuse/head';
 import 'vue-toastification/dist/index.css'
 
 const app = createApp(App)
@@ -21,6 +22,8 @@ const toastOptions = {
   rtl: false
 };
 
+const head = createHead();
+app.use(head)
 app.use(router)
 app.use(Toast, toastOptions)
 app.mount('#app')
