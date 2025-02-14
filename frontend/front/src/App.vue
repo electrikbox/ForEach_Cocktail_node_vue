@@ -1,9 +1,11 @@
 <template>
   <Header></Header>
   <div class="d-flex justify-content-center">
-    <transition name="zoom" mode="out-in">
-      <RouterView></RouterView>
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition name="zoom" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -17,10 +19,10 @@ import Header from './components/Header.vue';
 
 <style>
 .zoom-enter-active, .zoom-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
 .zoom-enter-from, .zoom-leave-to {
-  transform: scale(0.95);
+  transform: scale(0.99);
   opacity: 0;
 }
 </style>
